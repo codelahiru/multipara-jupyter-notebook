@@ -17,7 +17,7 @@ pd.set_option('display.max_rows', None)
 pd.set_option('display.max_columns', None)
 
 # Display the full DataFrame
-pd.options.display.width = 1000
+pd.options.display.width = 999
 
 dataframe = pd.read_csv(dataset_path, sep=';', header=None, names=headers)
 

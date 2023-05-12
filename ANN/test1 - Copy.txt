@@ -1,0 +1,47 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+import matplotlib.pyplot as plt
+import matplotlib.dates as mdates
+
+from tensorflow import keras
+from scipy.optimize import curve_fit
+
+# Download and read the data into a DataFrame
+dataset_path = keras.utils.get_file('SN_d_tot_V2.0.csv', 'https://www.sidc.be/silso/INFO/sndtotcsv.php')
+
+headers = ['Year', 'Month', 'Day', 'Decimal Date', 'Daily Total Sunspot Number', 'SD', 'Observations', 'Indicator']
+
+# Set the maximum number of rows and columns to be displayed
+pd.set_option('display.max_rows', None)
+pd.set_option('display.max_columns', None)
+
+# Display the full DataFrame
+pd.options.display.width = 999
+
+dataframe = pd.read_csv(dataset_path, sep=';', header=None, names=headers)
+
+# Print the first five rows of the DataFrame
+print(dataframe.head(10))
+
+missing_values = (dataframe['Daily Total Sunspot Number'] == -1).sum()
+total_values = len(dataframe['Daily Total Sunspot Number'])
+percentage_missing = (missing_values / total_values) * 100
+#print(f"Percentage of missing values: {percentage_missing:.4f}%")
+
+# Replace all instances of -1 in the "Daily Total Sunspot Number" column with 60
+dataframe['Daily Total Sunspot Number'] = dataframe['Daily Total Sunspot Number'].replace(-1, 60)
+
+# Convert the "Year", "Month", and "Day" columns to a single "Date" column
+dataframe['Date'] = pd.to_datetime(dataframe[['Year', 'Month', 'Day']])
+
+# set the 'Date' column as index
+dataframe.set_index('Date', inplace=True)
+
+# resample the data to monthly frequency and take the mean
+monthly_df = dataframe.resample('M').mean()
+
+
+
+
+
